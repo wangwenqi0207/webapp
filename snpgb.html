@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-transform "/>
+    <meta http-equiv="pragram" content="no-cache">
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="viewport" id="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1"/>
+    <title>失能评估表</title>
+    <link rel="stylesheet" href="static/css/common.css">
+    <link rel="stylesheet" href="static/css/assess.css">
+    <style>
+        p{font-size: 16px;}
+        input:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+        }
+        .arrow{
+            background: url(static/images/arrowR.png) no-repeat;
+            width: 7px;
+            height: 13px;
+            background-size: 100% 100%;
+            display: block;
+            position: absolute;
+            right: 0;
+            top: 16px;
+        }
+    </style>
+</head>
+<body class="container" >
+<div>
+    <form method="post" style="width: 100%;height: 100%;position: relative">
+        <ul class="cbr_ul">
+            <li>
+                1.参保人姓名
+                <input id="cbr_name" type="text" placeholder="请输入姓名" class="to_right" maxlength="12">
+            </li>
+            <li>
+                2.身份证号码
+                <input id="cbr_id_card" type="text" placeholder="请输身份证" class="to_right" maxlength="21">
+            </li>
+            <li id="showCityPicker">
+                3.居住地址
+                <div class="to_right" style="width: 70%;line-height: 45px;text-align: right">
+                    <span style="margin-right: 15px" id="addressReturn">省-市-区</span><i class="arrow"></i>
+                </div>
+            </li>
+            <li>
+                <div class="to_right" style="width: 70%;line-height: 45px;text-align: right">
+                    <input id="cbr_street" type="text" placeholder="街道" class="to_right">
+                </div>
+            </li>
+            <li>
+                <input id="cbr_address_info" type="text" placeholder="请输入详细地址：如街道、小区、门牌号码等" class="to_right" maxlength="60">
+            </li>
+        </ul>
+        <ul class="lxr_ul">
+            <li>
+                4.联系人姓名
+                <input id="contacts_name" type="text" placeholder="请输入姓名" class="to_right" maxlength="12">
+            </li>
+            <li>
+                5.身份证号码
+                <input id="contacts_id_card" type="text" placeholder="请输身份证" class="to_right" maxlength="21">
+            </li>
+            <li>
+                6.联系人电话
+                <input id="contacts_phone" type="tel" placeholder="请输入联系人电话" class="to_right" maxlength="11">
+            </li>
+            <li id="ycbrgx_dialog">
+                7.与参保人关系
+                <div class="to_right" style="width: 70%;line-height: 45px;text-align: right">
+                    <span id="ycbrgxResult" style="margin-right: 15px">请选择</span><i class="arrow"></i>
+                </div>
+            </li>
+        </ul>
+        <ul class="select_js_ul font_16_gray">
+            <li>
+                8.进食
+            </li>
+            <li class="js_current" >
+                <p class="answer_content">
+                    <span class="select_answer"><i>A</i></span>
+                    <label >使用餐具将饭菜送入口、咀嚼、吞咽等步骤</label>
+                </p>
+            </li>
+            <li>
+                <p class="answer_content">
+                    <span class="select_answer"><i>B</i></span>
+                    <label >使用餐具，在切碎、搅拌等协助下能完成</label></p>
+            </li>
+            <li>
+                <p class="answer_content">
+                    <span class="select_answer"><i>C</i></span>
+                    <label  >使用餐具有困难，进食需要帮助</label>
+                </p>
+            </li>
+            <li>
+                <p class="answer_content">
+                    <span class="select_answer"><i>D</i></span>
+                    <label >不能自主进食，或伴有吞咽困难，完全需要 帮助（如喂食、鼻饲等）</label>
+                </p>
+            </li>
+        </ul>
+
+        <ul class="select_xy_ul font_16_gray">
+            <li>
+                9.头部清洁及洗浴
+            </li>
+            <li class="xy_current">
+                <p class="answer_content">
+                    <span class="select_answer"><i>A</i></span>
+                    <label  >独立完成</label>
+                </p>
+            </li>
+            <li>
+                <p class="answer_content">
+                    <span class="select_answer"><i>B</i></span>
+                    <label >头部清洁能独立完成，洗浴需要协助</label>
+                </p>
+            </li>
+            <li>
+                <p class="answer_content">
+                    <span class="select_answer"><i>C</i></span>
+                    <label >在他人协助下能完成部分头部清洁；洗浴需要帮助</label>
+                </p>
+            </li>
+            <li>
+                <p class="answer_content">
+                    <span class="select_answer"><i>D</i></span>
+                    <label >完全需要帮助</label>
+                </p>
+            </li>
+        </ul>
+
+        <ul class="select_cy_ul font_16_gray">
+            <li>
+                10.穿衣
+            </li>
+            <li class="cy_current">
+                <p class="answer_content">
+                    <span class="select_answer"><i>A</i></span>
+                    <label  >独立完成</label>
+                </p>
+            </li>
+            <li>
+                <p class="answer_content">
+                    <span class="select_answer"><i>B</i></span>
+                    <label >需要他人协助，在适当时间内完成部分穿衣</label>
+                </p>
+            </li>
+            <li>
+                <p class="answer_content">
+                    <span class="select_answer"><i>C</i></span>
+                    <label >在他人协助下，仍需在较长时间内完成部分 穿衣</label>
+                </p>
+            </li>
+            <li>
+                <p class="answer_content">
+                    <span class="select_answer"><i>D</i></span>
+                    <label >完全需要帮助</label>
+                </p>
+            </li>
+        </ul>
+
+        <ul class="select_rc_ul font_16_gray">
+            <li>
+                11.大小便及如厕
+            </li>
+            <li class="rc_current">
+                <p class="answer_content">
+                    <span class="select_answer"><i>A</i></span>
+                    <label >如厕不需协助</label>
+                </p>
+            </li>
+            <li>
+                <p class="answer_content">
+                    <span class="select_answer"><i>B</i></span>
+                    <label >在适当提示和协助下能如厕或使用便盆</label>
+                </p>
+            </li>
+            <li>
+                <p class="answer_content">
+                    <span class="select_answer"><i>C</i></span>
+                    <label >在很多提示和协助下尚能如厕或使用便盆</label>
+                </p>
+            </li>
+            <li>
+                <p class="answer_content">
+                    <span class="select_answer"><i>D</i></span>
+                    <label >如厕完全需要帮助</label>
+                </p>
+            </li>
+        </ul>
+
+        <ul class="select_yd_ul font_16_gray">
+            <li>
+                12.移动
+            </li>
+            <li class="yd_current">
+                <p class="answer_content">
+                    <span class="select_answer"><i>A</i></span>
+                    <label >独立完成</label>
+                </p>
+            </li>
+            <li>
+                <p class="answer_content">
+                    <span class="select_answer"><i>B</i></span>
+                    <label >借助较小外力或辅助装置能完成站立、转移、行走、上下楼梯等</label>
+                </p>
+            </li>
+            <li>
+                <p class="answer_content">
+                    <span class="select_answer"><i>C</i></span>
+                    <label >动则气急喘息，借助较大外力才能完成站立、转移、行走，不能上下楼梯</label>
+                </p>
+            </li>
+            <li>
+                <p class="answer_content">
+                    <span class="select_answer"><i>D</i></span>
+                    <label >卧床不起；休息状态下时有气息喘息，难以站立；移动完全需要帮助</label>
+                </p>
+            </li>
+        </ul>
+
+        <ul class="select_jb_ul font_16_gray">
+            <li>
+                13.疾病
+            </li>
+            <li class="jb_current">
+                <p class="answer_content">
+                    <span class="select_answer"><i>A</i></span>
+                    <label >无帕金森病、中风后遗症等导致上述能力受限的疾病</label>
+                </p>
+            </li>
+            <li>
+                <p class="answer_content">
+                    <span class="select_answer"><i>B</i></span>
+                    <label >有帕金森病、中风后遗症等导致上述能力受限的疾病之一</label>
+                </p>
+            </li>
+            <li>
+                <p class="answer_content">
+                    <span class="select_answer"><i>C</i></span>
+                    <label >有帕金森病、中风后遗症等导致上述能力受限的疾病一种以上</label>
+                </p>
+            </li>
+        </ul>
+
+        <ul class="zj_ul">
+            <li><span class="sum">合计：0分</span></li>
+            <li class="is_apply_assess">是否确认申请失能评估
+                <span id="select_is" class="to_right" style="width: 70%;line-height: 45px;text-align: right">
+            <i class="current">是</i><i>否</i></span>
+            </li>
+        </ul>
+
+        <p class="bottom_sm">说明：自评分值超过40分（含），可提出评估申请；自评分值小于40分的，不建议评估申请</p>
+        <p class="bottom_sm" style="margin-bottom: 120px;margin-top: 0">申明：此表由参保人自评打分，仅作为是否申请失能评估的参考依据，最终结果以正式评估结论为准。</p>
+
+        <a class="submit" id="submit">提交</a>
+    </form>
+
+</div>
+
+<script src="static/js/jquery-3.3.1.min.js"></script>
+<script src="static/js/common.js"></script>
+<script src="static/js/picker.min.js"></script>
+<script type="text/javascript" src="static/js/city.js"></script>
+<script type="text/javascript" src="static/js/sqpg.data.js"></script>
+<script type="text/javascript" src="static/js/ycbrgxSelect.js"></script>
+<script type="text/javascript" src="static/js/citySelect.js"></script>
+
+<script>
+    var cbrName,cbrIdCardNum,cbrStreet,cbrAddressInfo;
+    var contactsName,contactsIdCardNum,contactsPhone;
+    var jsAnwser = 1;
+    var xyAnwser = 1;
+    var cyAnwser = 1;
+    var rcAnwser = 1;
+    var ydAnwser = 1;
+    var jbAnwser = 1;
+    var jsScore = 0;
+    var xyScore = 0;
+    var cyScore = 0;
+    var rcScore = 0;
+    var ydScore = 0;
+    var jbScore = 0;
+    var sumCode = 0;
+    var confirmApply = 0;
+    $(function () {
+        var lxrPhone = window.localStorage.getItem("phone");
+        if (lxrPhone.length > 0) {
+            $("#contacts_phone").val(lxrPhone);
+        }
+        var sex = $('#select_is i');
+        sex.on('click', function () {
+            $(this).addClass('current').siblings().removeClass('current');
+            confirmApply  = $(this).index();
+        });
+        $('.sum').html("总分："+sumCode +"分");
+    });
+    //选择地址
+
+    $(".select_js_ul li").click(function (e) {
+        $(this).addClass("js_current").siblings("li").removeClass("js_current");
+        jsAnwser = $(this).index();
+        if (jsAnwser == 1) {
+            jsScore = 0;
+        } else if (jsAnwser == 2) {
+            jsScore =  5;
+        } else if (jsAnwser == 3) {
+            jsScore =  10;
+        } else if (jsAnwser == 4) {
+            jsScore = 20;
+        }
+        sumCode = jsScore+ xyScore  + cyScore + rcScore + ydScore + jbScore;
+        $('.sum').html("总分："+sumCode +"分");
+    });
+
+    $(".select_xy_ul li").click(function (e) {
+        $(this).addClass("xy_current").siblings("li").removeClass("xy_current");
+        xyAnwser = $(this).index();
+        if (xyAnwser == 1) {
+            xyScore = 0;
+        } else if (xyAnwser == 2) {
+            xyScore =  5;
+        } else if (xyAnwser == 3) {
+            xyScore =  10;
+        } else if (xyAnwser == 4) {
+            xyScore = 20;
+        }
+        sumCode = jsScore+ xyScore + cyScore + rcScore + ydScore + jbScore;
+        $('.sum').html("总分："+sumCode +"分");
+    });
+    $(".select_cy_ul li").click(function (e) {
+        $(this).addClass("cy_current").siblings("li").removeClass("cy_current");
+        cyAnwser = $(this).index();
+        if (cyAnwser == 1) {
+            cyScore = 0;
+        } else if (cyAnwser == 2) {
+            cyScore =  5;
+        } else if (cyAnwser == 3) {
+            cyScore =  10;
+        } else if (cyAnwser == 4) {
+            cyScore = 20;
+        }
+        sumCode = jsScore+ xyScore + cyScore+rcScore + ydScore + jbScore;
+        $('.sum').html("总分："+sumCode +"分");
+    });
+    $(".select_rc_ul li").click(function (e) {
+        $(this).addClass("rc_current").siblings("li").removeClass("rc_current");
+        rcAnwser = $(this).index();
+        if (rcAnwser == 1) {
+            rcScore = 0;
+        } else if (rcAnwser == 2) {
+            rcScore =  5;
+        } else if (rcAnwser == 3) {
+            rcScore =  10;
+        } else if (rcAnwser == 4) {
+            rcScore = 20;
+        }
+        sumCode = jsScore+ xyScore + cyScore + rcScore + ydScore + jbScore;
+        $('.sum').html("总分："+sumCode +"分");
+    });
+
+    $(".select_yd_ul li").click(function (e) {
+        $(this).addClass("yd_current").siblings("li").removeClass("yd_current");
+        ydAnwser = $(this).index();
+        if (ydAnwser == 1) {
+            ydScore = 0;
+        } else if (ydAnwser == 2) {
+            ydScore =  5;
+        } else if (ydAnwser == 3) {
+            ydScore =  10;
+        } else if (ydAnwser == 4) {
+            ydScore = 20;
+        }
+        sumCode = jsScore+ xyScore  + cyScore +  rcScore + ydScore + jbScore;
+        $('.sum').html("总分："+sumCode +"分");
+    });
+    $(".select_jb_ul li").click(function (e) {
+        $(this).addClass("jb_current").siblings("li").removeClass("jb_current");
+        jbAnwser = $(this).index();
+        if (jbAnwser == 1) {
+            jbScore = 0;
+        } else if (jbAnwser == 2) {
+            jbScore =  10;
+        } else if (jbAnwser == 3) {
+            jbScore =  20;
+        }
+        sumCode = jsScore+ xyScore  + cyScore + rcScore + ydScore + jbScore;
+        $('.sum').html("总分："+sumCode +"分");
+    });
+ /*   (function ($, doc) {
+        $.init();
+        $.ready(function () {
+            /!*与参保人关系*!/
+            var _getParam = function (obj, param) {
+                return obj[param] || '';
+            };
+            var cbrPicker = new $.PopPicker();
+            cbrPicker.setData(ycbrgxData);
+            var showCbrPickerButton = doc.getElementById('ycbrgx_dialog');
+            var cbrResult = doc.getElementById('ycbrgxResult');
+            showCbrPickerButton.addEventListener('click', function (event) {
+                cbrPicker.show(function (items) {
+                    cbrPicker.hide();
+                    cbrPicker.dispose();
+                    cbrResult.innerText = items[0].text;
+                    relationshipInsUser = parseInt(items[0].value);
+                });
+
+            }, false);
+
+            var cityPicker3 = new $.PopPicker({
+                layer: 3
+            });
+            cityPicker3.setData(cityData3);
+            cityPicker3.pickers[0].setSelectedIndex(10);
+            cityPicker3.pickers[1].setSelectedIndex(6);
+            cityPicker3.pickers[2].setSelectedIndex(6);
+            var showCityPickerButton = doc.getElementById('showCityPicker');
+            var cityResult3 = doc.getElementById('addressReturn');
+            showCityPickerButton.addEventListener('click', function (event) {
+                cityPicker3.show(function (items) {
+                    cityResult3.innerText = _getParam(items[0], 'text') + " " + _getParam(items[1], 'text') + " " + _getParam(items[2], 'text');
+                    cityPicker3.hide();
+                    cityPicker3.dispose();
+                    cbrProvince = items[0].text;
+                      cbrCity = items[1].text;
+                      cbrDistrict = items[2].text;
+                });
+            }, false);
+        });
+    })(mui, document);*/
+
+     $(".submit").on('click', function () {
+         cbrName = $("#cbr_name").val();
+         cbrIdCardNum =  $("#cbr_id_card").val();
+         cbrStreet =  $("#cbr_street").val();
+         cbrAddressInfo =$("#cbr_address_info").val();
+
+         contactsName = $("#contacts_name").val();
+         contactsIdCardNum =  $("#contacts_id_card").val();
+         contactsPhone =  $("#contacts_phone").val();
+
+         if (cbrName == null || cbrName == "") {
+             alert("参保人姓名不能为空！");
+             return false;
+         }
+         if (cbrIdCardNum == null || cbrIdCardNum == "") {
+             alert("参保人身份证号不能为空！");
+             return false;
+         }
+         if(province == "" ||  province== null ||city == "" || city == null) {
+             alert("请选择所属省份地址！");
+             return false;
+         }
+         if (cbrAddressInfo == null || cbrAddressInfo == "") {
+             alert("请输入详细地址！");
+             return false;
+         }
+         if (contactsPhone.length > 11 || contactsPhone.length < 10) {
+             alert("联系人人电话号码格式不正确！");
+             return false;
+         }
+         if (contactsName == null || contactsName == "") {
+             alert("联系人姓名不能为空！");
+             return false;
+         }
+         if (contactsIdCardNum == null || contactsIdCardNum == "") {
+             alert("联系人身份证号不能为空！");
+             return false;
+         }
+         if (relationshipInsUser == null || relationshipInsUser == "") {
+             alert("请选择与参保人关系！");
+             return false;
+         }
+         checkNum();
+     });
+    var checkNum = function(){
+        var datas = {};
+        datas.act = "InsSelfAssessment"
+        datas.insName = cbrName;
+        datas.insIdcard = cbrIdCardNum;
+        datas.province = province;
+        datas.city = city;
+        datas.district = district;
+        datas.street = cbrStreet;
+        datas.address = cbrAddressInfo;
+        datas.contactName = contactsName;
+        datas.contactIdcard = contactsIdCardNum;
+        datas.contactPhone = contactsPhone;
+        datas.relationshipInsUser = relationshipInsUser;
+        datas.q1 = jsAnwser;//答案从1开始
+        datas.q2 = xyAnwser;
+        datas.q3 = cyAnwser;
+        datas.q4 = rcAnwser;
+        datas.q5 = ydAnwser;
+        datas.q6 = jbAnwser  ;
+        datas.confirmApply = confirmApply;//是否确认失能评估 1是 0否
+        var url =baseurl+"ltcins-intact-ins-api/ins_self_assessment_update.htm";
+        $.ajax(url, {
+            type:"post",
+            data: datas,
+            async:false,
+            success: function(data) {
+                if (data.errorCode==0) {
+                    window.location.href = "snpgbtjcg.html";
+                }else {
+                    if(data.errorMsg == null || data.errorMsg == "") {
+                        alert("提交失能评估表失败！");
+                    } else {
+                        alert(data.errorMsg);
+                    }
+                }
+            },
+            error: function (data) {
+                alert(JSON.parse(data));
+                alert("申请工单失败！");
+            }
+        });
+    };
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<!--STATUS OK-->
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+<style type="text/css">
+<#include "style.css">
+</style>
+
+<script type="text/javascript" src="<@sp.ctx />js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="<@sp.ctx />js/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="<@sp.ctx />js/md5.js"></script>
+<script src="<@sp.ctx />js/json2.js"></script>
+
+<title>API测试页面</title>
+<script type="text/javascript">
+
+	(function($) {
+		$.fn.serializeJson = function(filterEmpty) {
+		
+			var jsonFm = this.serialize();
+			jsonFm = jsonFm.replace(new RegExp("=","gm"),"\":\"");
+			jsonFm = jsonFm.replace(new RegExp("&","gm"),"\",\"");
+			
+			jsonFm = "{\""+jsonFm +"\"}";
+			var json = JSON.parse(jsonFm);
+			if(!! filterEmpty){
+				for(key in json){
+					if(! json[key]){
+						delete json[key];
+					}
+				}
+			}
+			return json;
+			
+		};
+	})(jQuery);
+	
+	
+</script>
+<script type="text/javascript">
+	
+	
+	
+	
+	
+	
+	$(function(){
+		//$("#commonTable").show();
+		/* var privateKey =  window.sessionStorage.getItem("privateKey");
+		$("#privateKey").val(privateKey); */
+		var sessionId =  window.sessionStorage.getItem("sessionId")
+		$("#sessionId").val(sessionId);
+		
+		//初始化时生成token
+		$("#reqToken").val( new Date().getTime());
+		
+		var appId = window.localStorage.getItem("_app_id_");
+		if(! appId){
+			var dat1 = new Date();
+			appId = dat1.getFullYear()+"-"+(dat1.getMonth()+1)%13+"-"+dat1.getDate()+"-"+dat1.getHours()+"-"+dat1.getMinutes()+"-"+dat1.getSeconds();
+			appId = _getBr()+"_"+appId;
+			window.localStorage.setItem("_app_id_", appId);
+		}
+		$("#appId").val(appId);
+		
+	});
+	
+	
+	function _getBr (){
+		var ua = (window.navigator.userAgent).toLocaleLowerCase();
+		var brs = "chrome,firefox,msie,opera,safari,qq,360".split(",");
+		var oss = "android,iphone,mac,windows,linux".split(",");
+		var br = "other";
+		var os = "other";
+		for(var i=0;i<brs.length;i++){
+			if(ua.indexOf(brs[i])>=0){
+				br= brs[i];
+				break;
+			}
+		}
+		for(var i=0;i<oss.length;i++){
+			if(ua.indexOf(oss[i])>=0){
+				os =  oss[i];
+				break;
+			}
+		}
+		
+		return os+"-"+br;
+		
+	}
+	
+	
+
+	//需要签名的字段，约定串不需要加，将在后台自动加
+	
+	var signArr = [];
+	<#list signProps as porp>
+		signArr.push('${porp}');
+	</#list>
+	function getToSignStr(){
+		var signBefor = "";
+		for(var i=0;i<signArr.length;i++){
+			signBefor +=($("#fm1").find(":input[name="+signArr[i]+"]").val()); 
+		}
+		var lastMd5 = hex_md5(signBefor+$("#privateKey").val());
+		$("#sign").val(lastMd5);
+		return lastMd5;
+	}	
+	
+	function submitFm(){
+		var url = window.location.href;
+		url = (url.split("?")[0]);
+		//签名
+		getToSignStr();
+		var jsonFm = $("#fm1").serializeJson(true);
+		jsonFm = JSON.stringify(jsonFm); 
+		//alert("提交json:\n"+jsonFm);
+		$.post("<@sp.ctx />/jsonApiEnc.htm","act=enc&params="+jsonFm,function cbk(encData){
+			//submit;
+			if(typeof encData != 'string'){
+				encData = JSON.stringify(encData); 
+			}
+			//alert(encData);
+			//submit
+			var beginPost = new Date().getTime();
+			$.post(url,"params="+encData,function callbk(msg){
+				var endPost = new Date().getTime();
+				var jsonObj = null;
+				if(typeof msg == 'string'){
+					var jsonObj = JSON.parse(msg);
+				}
+				else{
+					jsonObj = msg;
+				}
+				var jsonTextFmt = JSON.stringify(jsonObj, false, 4);
+				$("#repJsonText").html("<pre>"+jsonTextFmt+"</pre>");
+				$("#rspTimeSp").text("本次提交用时："+(endPost-beginPost)+" ms ")
+				
+				//alert(msg);
+				
+				var rspDTO =  eval("("+msg+")");
+				if(rspDTO.errorCode == "0"){
+					if(rspDTO.sessionId != null ){
+						setSessionIdLocal(rspDTO.sessionId);
+					}
+				}
+				//sessionStorage.setItem("privateKey", $("#privateKey").val());
+			});
+			
+			
+		});
+		//alert(jsonFm);
+		
+		/* //提交到服务器测试
+		$.post(url,jsonFm,function callbk(msg){
+			alert(msg);
+			var rspDTO =  eval("("+msg+")");
+			if(rspDTO.errorCode == "0"){
+				if(rspDTO.sessionId != null ){
+					setSessionIdLocal(rspDTO.sessionId);
+				}
+			}
+			sessionStorage.setItem("privateKey", $("#privateKey").val());
+		});  */
+		/* $("#fm1").attr("action",url);
+		$("#fm1").submit(); */
+		
+	}
+	
+	function viewSubmit(){
+		var url = window.location.href;
+		url = (url.split("?")[0]);
+		//签名
+		getToSignStr();
+		
+		var jsonFm = $("#fm1").serializeJson(true);
+		jsonFm = JSON.stringify(jsonFm, "\n", "\t");
+		//alert("查看提交json:\n"+jsonFm);
+		$("#repJsonText").html("<pre>"+jsonFm+"</pre>");
+	}
+	
+	function setSessionIdLocal(sessionId){
+		window.sessionStorage.setItem("sessionId",sessionId);
+		$("#sessionId").val(sessionId);
+	}
+	
+	function newReqToken(input){
+		
+		var token = new Date().getTime();
+		input.value = token;
+	}
+	
+	
+</script>
+</head>
+
+<body>
+
+<div id="form-wrapper">
+	<span style="width:100%;border: 1px solid; margin: 20px" ><a href="<@sp.ctx />test.htm" >返回首页</a></span>
+    <form method="post" id="fm1">
+        <div id="form-inner">
+       	<button  type="button" onclick="$('#commonTable').slideToggle();return ;"  >查看/隐藏公共参数</button>
+       	<span style="width:100%;border: 1px solid; margin: 20px"  ><a href="<@sp.ctx />errorCodeApi.htm" >CODE对照表</a></span>
+        <fieldset >
+        <legend>公共参数</legend>
+        <table id="commonTable" >
+        	<!-- 共性参数  -->
+        	<tr>
+	          <th align="right" valign="top">appId<br /></th>
+	          <td valign="top"><input type="text" class="input"  id="appId" name="appId"  placeholder="客户端生成的唯一标识码" value=""  /></td>
+          </tr>
+        	<tr>
+	          <th align="right" valign="top">请求token<br />reqToken</th>
+	          <td valign="top"><input type="text" class="input"  id="reqToken" name="reqToken"  placeholder="请求token,防止重提交等安全用，每次提交生成新的" value="1234560001" onclick="newReqToken(this);" /></td>
+          </tr>
+            <tr>
+	          <th align="right" valign="top">客户端系统(例)<br />clientInfo</th>
+	          <td valign="top">
+	          <!-- <select id="clientInfo" name="clientInfo"  >
+		          	<option>iphone6|ios_8.4.1|2.1.5</option>
+		          	<option>iphone6|ios_8.4.1|2.1.4</option>
+		          	<option>samsung-sgh-g508e|android_5.0|2.1.5</option>
+	          		<option>samsung-sgh-g508e|android_5.0|2.1.4</option>
+	          		<option>firefox_3.0.1|windows nt_5.2|2.1.3</option>
+	          	 	<option>firefox_3.0.1|windows nt_5.2|2.0.5</option>
+	          	 	<option>firefox_3.0.1|windows nt_5.2</option>
+	          	 	<option>firefox_3.0.1</option>
+	          </select> -->
+	          <input type="text"  class="input"  id="clientInfo" name="clientInfo" value="iphone6|ios_10.2|1.1" placeholder="手机型号|系统及版本号|app版本号，如iphone6|ios_10.2|1.1" size=""/>
+	          </td>
+          </tr>
+           <tr>
+	          <th align="right" valign="top">语言设置<br />language</th>
+	          <td valign="top">
+	          		<input type="radio"    name="language"  value="zhcn" > zhcn
+	          
+	          
+	          </td>
+          </tr>
+         
+          </table>
+          </fieldset>
+          <fieldset >
+        <legend>业务参数</legend>
+        <table>
+         
+       
+         <#list inputListMap?keys as key>
+         <#assign input=inputListMap[key]  />
+          <tr>
+          <th align="right" valign="top">${input.label()}<br />${key}<#if input.notEmpty()><span class="must">*</span></#if></th>
+          <td valign="top">
+          	<#if input.constValue()?has_content>
+          	 	<input type="text" class="input" readonly="readonly" name="${key}"  value="${input.constValue()}" />
+         	<#elseif input.inputType() == 'text'>
+            	<input type="text" class="input" id="${key}" name="${key}" value="${input.defaultValue()}" title="${input.descri()}" placeholder="${input.descri()}" />
+      
+            <#elseif input.inputType() == 'select'>
+				<select id="${key}"  name="${key}" class="input" title="${input.descri()}" >
+					<#list  input.inputValues() as vs>
+						<option value="${vs?split(':')[0]}" <#if vs?split(':')[0] == input.defaultValue()>selected="selected"</#if>   />${vs?split(':')[1]} </option>
+					</#list>
+				</select>
+			<#elseif input.inputType() == 'radio'>
+				<#list  input.inputValues() as vs>
+					<input type="radio" value="${vs?split(':')[0]}"  title="${input.descri()}"  name="${key}"   <#if vs?split(':')[0] == input.defaultValue()>checked="checked"</#if> />${vs?split(':')[1]}
+				</#list>
+			<#elseif input.inputType() == 'checkbox'>
+				<#list  input.inputValues() as vs>
+					<input type="checkbox" value="${vs?split(':')[0]}" title="${input.descri()}" name="${key}"  <#if  input.defaultValue()?contains(vs?split(':')[0])>checked="checked"</#if> />${vs?split(':')[1]}
+				</#list>
+			<#elseif input.inputType() == 'number'>
+				<input type="number"  name="${key}" id="${key}" title="${input.descri()}" value="${input.defaultValue()}" /> 
+			<#elseif input.inputType() == 'date'>
+				<input  type="text" onfocus="WdatePicker({isShowWeek:true})" title="${input.descri()}"  id="${key}" name="${key}"   class="Wdate" readonly="readonly" 
+			<#if input.defaultValue()?has_content  >
+					 <#if input.defaultValue()=='now'>
+					 value="${curDate?string('yyyy-MM-dd')}"
+					 <#else>
+					  value="${input.defaultValue()}"
+					 </#if>
+				</#if>
+				
+				/> 
+			<#elseif input.inputType() == 'datetime'>
+				<input  type="text" name="${key}" id="${key}" title="${input.descri()}" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})" class="Wdate" readonly="readonly" 
+				<#if input.defaultValue()?has_content  >
+					<#if input.defaultValue()=='now'>
+					 value="${curDate?string('yyyy-MM-dd HH:mm:ss')}"
+					 <#else>
+					  value="${input.defaultValue()}"
+					 </#if>
+				</#if>
+				 />
+			
+			<#elseif input.inputType() == 'textarea'>
+				<textarea class="input textarea"  id="${key}" title="${input.descri()}"  name="${key}"  placeholder="${input.descri()}" value="input.defaultValue()" ></textarea>
+			<#else>
+				<input type="${input.inputType()}" title="${input.descri()}" class="input" name="${key}"  placeholder="${input.descri()}"  value="input.defaultValue()"/>	
+            </#if>
+            
+           </td>			
+             </tr>
+      		</#list>
+      		<tr>
+          <th align="right" valign="top">用户串：<span class="must">*</span></th>
+          <td valign="top">
+          	<input type="text"  id="privateKey" class="input"  value="A5D883919E15326712396784300321348D113509121611475F930"  style="width: 130%" placeholder="不知道？请找管理员要,只要输一次"   />	
+          </td>
+          </tr>
+          <tr>
+          
+          </tr> 
+      		</table>  
+      	 </fieldset>
+      	 
+      	 	
+      	 	<div style="width: 100%;text-align: right;">
+      	 		<input type="hidden" id="sign" name="sign" class="input"   placeholder="签名，双击得到"  value=""  />
+	      	 	<input type="button" class="button " style="float: none;;" value="查看原始提交JSON"   onclick="viewSubmit()"/>
+	      		<input type="button" class="button" style="float: none;" value="提交测试" 	onclick="submitFm();" />
+      		</div>
+      		
+      		 <fieldset >
+		        <legend>返回结果JSON</legend>
+		        <table id="commonTable" >
+		        	<!-- 共性参数  -->
+		        	<tr>
+			          <td valign="top" id="repJsonText"></td>
+		          </tr>
+		      	</table>
+		      </fieldset>
+		      	<div style="width: 100%;text-align: right; ">
+		      		<span style="color:red;font-size: 9pt;font-family: 宋体;" id="rspTimeSp"></span>
+		      	</div>
+        </div>
+    </form>
+</div>
+
+</html>

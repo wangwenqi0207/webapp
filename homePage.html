@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="Cache-Control" content="no-transform " />
+	<meta http-equiv="pragram" content="no-cache">
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="viewport" id="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1" />
+	<title>长期护理险</title>
+	<link rel="stylesheet" href="static/css/common.css">
+	<link rel="stylesheet" href="static/css/cqhlx.css">
+	<link rel="stylesheet" href="static/css/mui.min.css">
+</head>
+
+<body style="background: white">
+<div class="container">
+	<img src="static/images/banner_img.png" class="nav_img">
+	<ul class="evaluate_ul">
+		<li class="apply_evaluate txt">
+			<img src="static/images/apply_evaluate_icon.png" class="evaluate_img">
+			<p>申请评估</p>
+		</li>
+		<li class="my_evaluate txt">
+			<img src="static/images/my_evaluate_icon.png" class="evaluate_img">
+			<p>我的评估</p>
+		</li>
+	</ul>
+	<a class="hotline" id="hotline"><i class="hotline_img"></i>热线电话</a>
+</div>
+<script src="static/js/jQuery.1.10.1.min.js"></script>
+<script src="static/js/mui.min.js"></script>
+<script type="text/javascript" src="static/js/common.js"></script>
+<script>
+    $(function() {
+        login();
+    });
+    $(".apply_evaluate").click(function() {
+        window.location.href = "sqpg.html";
+    });
+    $(".my_evaluate").click(function() {
+        window.location.href = "wdpg.html";
+    });
+
+    mui.init({
+        swipeBack: true //启用右滑关闭功能
+    });
+    document.getElementById("hotline").addEventListener('tap', function() {
+        var btnArray = ['取消', '呼叫'];
+        mui.confirm('400-365-099', '', btnArray, function(e) {
+        })
+    });
+
+    var login = function () {
+        var datas = {};
+        datas.act = "AppLogin";
+        datas.phoneNumber =  window.localStorage.getItem("phone");;
+        var url =baseurl + "ltcins-intact-ins-api/customer_contact_login.htm";
+        $.ajax(url, {
+            type: "post",
+            data: datas,
+            success: function (data) {
+                var c = data;
+                var b = data.errorCode;
+                if (data.errorCode == 0) {
+                    alert("登录成功！")
+                } else {
+                    if (data.errorMsg == null || data.errorMsg == "") {
+                        alert("登录失败！");
+                    } else {
+                        alert(data.errorMsg);
+                    }
+                }
+            },
+            error: function (data) {
+                alert(JSON.parse(data));
+                alert("登录失败！");
+
+            }
+        });
+    }
+</script>
+
+</body>
+
+</html>

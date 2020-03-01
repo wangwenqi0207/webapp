@@ -1,0 +1,34 @@
+.content {
+  padding: 60px 15px 65px 15px;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  background: #f2f2f2; }
+  .content .main {
+    background: #fff; }
+    .content .main h5 {
+      padding: 20px 38px 19px 38px;
+      font-size: 15px;
+      text-align: center; }
+    .content .main p {
+      padding: 0 15px;
+      font-size: 12px; }
+      .content .main p.title {
+        margin-top: 25px; }
+
+footer {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  z-index: 9999;
+  background: #fff; }
+  footer ul li {
+    font-size: 18px;
+    line-height: 50px; }
+    footer ul li:nth-child(1) {
+      float: left;
+      color: #000;
+      padding-left: 15px; }
+    footer ul li:nth-child(2) {
+      float: right;
+      color: #e03d47;
+      padding-right: 15px; }

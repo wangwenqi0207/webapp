@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="pragram" content="no-cache">
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" id="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1" />
+    <title>工单详情</title>
+    <link rel="stylesheet" href="static/css/common.css">
+    <link rel="stylesheet" href="static/css/orderDetail.css">
+</head>
+<body style="background: #f2f2f2;">
+<div class="status_box" id="status_box">
+    <div class="status_two_box">
+        <span id="order_type"></span>
+        <img src="static/images/white_return.png" />
+    </div>
+    <p id="order_status_info" style="display: none;">请等待评估师上门，进行评估</p>
+</div>
+<ul class="detail_list_ul">
+    <li style="display: none">
+        <span class="time_span"><i class="time_icon"></i>预约时间</span>
+        <span class="to_r" id="yy_time">2018-05-20 &nbsp;09:30</span>
+    </li>
+    <li style="display: none">
+        <i class="address_icon"></i>
+        <div class="address_info">
+            <span id="order_address">评估地址：测试浙江省金华市义乌市福宁北路9号仕林东湖7号楼1202室</span>
+        </div>
+    </li>
+    <li style="display: none">
+        <span class="informing_span"><i class="informing_icon"></i>评估结果告知书</span>
+        <span class="to_r informing_return">6级</span>
+    </li>
+    <li><p class="detail_title">参保人信息</p></li>
+    <li>
+        参保人姓名
+        <span class="to_r" id="cbr_name"></span>
+    </li>
+    <li>
+        性别
+        <span class="to_r" id="cbr_sex"></span>
+    </li>
+    <li>
+        年龄
+        <span class="to_r" id="cbr_age"></span>
+    </li>
+    <li>
+        身份证号
+        <span class="to_r" id="cbr_card_num"></span>
+    </li>
+    <li>
+        <ul class="images_list">
+            <li><img class="id_card_img1"></li>
+            <li><img class="id_card_img2"></li>
+        </ul>
+    </li>
+    <li>
+        手机号
+        <span class="to_r" id="cbr_phone">15677635677</span>
+    </li>
+    <li><p class="detail_title">联系人信息</p></li>
+    <li>
+        联系人姓名
+        <span class="to_r" id="contact_name"></span>
+    </li>
+    <li>
+        性别
+        <span class="to_r" id="contact_sex"></span>
+    </li>
+    <li>
+        身份证号
+        <span class="to_r" id="contact_card_num"></span>
+    </li>
+    <li>
+        手机号
+        <span class="to_r" id="contact_phone"></span>
+    </li>
+    <li>
+        与参保人关系
+        <span class="to_r" id="contact_ycbrgx"></span>
+    </li>
+    <li><p class="detail_title" >联系地址</p></li>
+    <li>
+        <span id="contact_address"></span>
+    </li>
+    <li>
+        <span id="contact_address_info"></span>
+    </li>
+    <li><p class="detail_title">工单信息</p></li>
+    <li>
+        工单编号
+        <span class="to_r" id="order_num"></span>
+    </li>
+    <li>
+        工单类型
+        <span class="to_r" id="order_lx"></span>
+    </li>
+    <li>
+        提交时间
+        <span class="to_r" id="order_create_time"></span>
+    </li>
+</ul>
+
+
+</div>
+
+<footer class="display">
+    <div class="order_footer_box">
+        <p class="time">09:23</p>
+        <p class="time_info">自动取消</p>
+        <span class="order_status">
+            <i class="confirm_order">确认接单</i>
+            <i class="cancel_order">取消</i>
+        </span>
+    </div>
+</footer>
+
+<div id="mask"></div>
+<!--报名填写-->
+<div class="tips_box" id="sign_up_box">
+    <ul class="txt_gray_14">
+        <li>受理时间<span class="rt_15">2018-04-18 09:30</span></li>
+        <li>接单时间<span class="rt_15">2018-04-18 09:30</span></li>
+        <li>签到时间<span class="rt_15">2018-04-18 09:30</span></li>
+        <li>签出时间<span class="rt_15">2018-04-18 09:30</span></li>
+        <li class="close_tips_box"><a>关闭</a></li>
+    </ul>
+</div>
+
+<script src="static/js/jQuery.1.10.1.min.js"></script>
+<script src="static/js/swiper/swiper-3.3.1.jquery.min.js"></script>
+<script src="static/js/e-smart-zoom-jquery.min.js"></script>
+<link href="static/js/swiper/swiper.min.css" type="text/css" rel="stylesheet" />
+<script src="static/js/common.js"></script>
+<script>
+    var mOrderNum,picList;
+    $(function(){
+        mOrderNum = getUrlParam("orderNo");
+        checkNum();
+    });
+   /* //接单时间
+    $("#status_box").click(function(){
+        $("#mask").fadeIn(300);
+        $("#sign_up_box").animate({bottom:"0"},300,function(){});
+
+    });
+    //关闭接单时间
+    $(".close_tips_box").click(function(){
+        $("#mask").fadeOut(300);
+        $("#sign_up_box").animate({bottom:"-150%"},500,function(){});
+
+    });*/
+    var checkNum = function(){
+        var datas = {};
+        datas.act = "getUserApplyOrder";
+        datas.orderNo = mOrderNum;
+        var url = baseurl+"ltcins-intact-ins-api/authed/user_apply_order.htm";
+        $.ajax(url, {
+            type:"post",
+            data: datas,
+            success: function(data) {
+                if (data.errorCode==0) {
+                    // alert("获取成功" + JSON.stringify(data));
+					console.log(JSON.stringify(data));
+                    /*alert("获取成功999" + JSON.stringify(content));*/
+                    data.dataList.map(function (content,i) {
+                        switch (i) {
+                            case 0:
+                                $("#cbr_phone").html(content[0].insPhone);
+                                var contactAddress = content[0].province + content[0].city +
+                                    content[0].district + content[0].appointedAddress;
+                                $("#order_address").html("评估地址："+ contactAddress);
+                                $("#contact_name").html(content[0].contactName);
+                                if (content[0].contactSex == "F"){
+                                    $("#contact_sex").html("女");
+                                } else {
+                                    $("#contact_sex").html("男");
+                                }
+                                $("#contact_card_num").html(content[0].contactIdcard);
+                                $("#contact_phone").html(content[0].contactPhone == null ? "" : content[0].contactPhone);
+                              /*  var ycbrgxData=[{value: "1",text: "自己"},{value:"2",text:"子女"
+                                },{value:"3",text:"父母"},{value:"4",text:"配偶"},{value:"5",text:"兄弟姐妹"
+                                },{value:"6",text:"朋友"},{value:"7",text:"其他"}];
+                                for(var i=0;i<ycbrgxData.length;i++){
+                                    if (content[0].relationshipInsUser == ycbrgxData[i].value) {
+                                        $("#contact_ycbrgx").html(ycbrgxData[i].text);
+                                    }
+                                }*/
+                                data.dataList.map(function(content) {
+                                    var relation;
+                                    switch (content[0].relationshipInsUser) {
+                                        case 1:
+                                            relation = "自己";
+                                            break;
+                                        case 2:
+                                            relation = "子女";
+                                            break;
+                                        case 3:
+                                            relation = "父母";
+                                            break;
+                                        case 4:
+                                            relation = "配偶";
+                                            break;
+                                        case 5:
+                                            relation = "兄弟姐妹";
+                                            break;
+                                        case 6:
+                                            relation = "朋友";
+                                            break;
+                                        default:
+                                            relation = "其他";
+                                            break;
+                                    }
+                                    $("#contact_ycbrgx").html(relation);
+                                });
+                                var addressInfo = content[0].province + "-" + content[0].city + "-" + content[0].district;
+                                $("#contact_address").html(addressInfo);
+                                $("#contact_address_info").html(content[0].appointedAddress);
+                                $("#cbr_phone").html(content[0].insPhone);
+                                var picAddress = content[0].applyPics;
+                                picList = picAddress;
+                                //var picAddress = "cardId_images/153916415868520181010165248.jpg,cardId_images/153916415868520181010165248.jpg";
+                                if (picAddress.length > 0 ){
+                                    if (picAddress.indexOf(",") != -1 ) {
+                                        var str = picAddress.split(",");
+                                        $(".id_card_img1").attr("src", baseurl + str[0]);
+                                        $(".id_card_img2").attr("src", baseurl + str[1]);
+                                        $(".id_card_img1").attr("big-src", baseurl + str[0]);
+                                        $(".id_card_img2").attr("big-src", baseurl + str[1]);
+                                    }
+                                }
+                                break;
+                            case 1:
+                                $("#order_num").html(content[0].orderNo);
+                                data.dataList.map(function(content) {
+                                    var status;
+                                    switch (content[0].orderStatus) {
+                                        case -1:
+                                            status = "参保人取消";
+                                            break;
+                                        case -2:
+                                            status = "拒接单";
+                                            break;
+                                        case -3:
+                                            status = "系统取消";
+                                            break;
+                                        case 0:
+                                            status = "待分配";
+                                            break;
+                                        case 1:
+                                            status = "已完成";
+                                            break;
+                                        case 2:
+                                            status = "待接单";
+                                            break;
+                                        case 3:
+                                            status = "待评估";
+                                            break;
+                                        case 4:
+                                            status = "正在评估";
+                                            break;
+                                        case 5:
+                                            status = "评估师A完成评估";
+                                            break;
+                                        case 6:
+                                            status = "已评估";
+                                            break;
+                                        case 8:
+                                            status = "待指派";
+                                            break;
+                                        case 10:
+                                            status = "待审核";
+                                            break;
+                                        default:
+                                            status = "未分配";
+                                            break;
+                                    }
+                                    $("#order_type").html(status);
+                                });
+                                $("#order_lx").html("初评");
+                                $("#cbr_name").html(content[0].insName);
+                                $("#cbr_card_num").html(content[0].insIdCard);
+                                if (content[0].sex == "F"){
+                                    $("#cbr_sex").html("女");
+                                } else {
+                                    $("#cbr_sex").html("男");
+                                }
+                                $("#cbr_age").html(content[0].age);
+                                $("#order_create_time").html(content[0].createdTime);
+                                break;
+                        }
+                    });
+
+                }else{
+                    if(data.errorMsg == null || data.errorMsg == "") {
+                        alert("获取详情信息失败！");
+                    } else {
+                        alert(data.errorMsg);
+                    }
+                }
+            },
+            error: function (data) {
+                alert(JSON.parse(data));
+            }
+        });
+    };
+
+    $(".images_list").delegate("img","click",function(){
+        var now=$(this);
+        showthumb(now);
+    });
+
+    //图片预览
+    function showthumb(obj){
+        var pic_arr = new Array();
+        var photo_pic = $(obj).parents(".images_list").find('img');
+        var $photo_list =$(obj).parents(".images_list");
+        var nIndex=$(obj).parent("li").index();
+        photo_pic.each(function(index){
+            pic_arr[index] = photo_pic.eq(index).attr("big-src");
+        });
+        var html_div = '';
+        for(var i=0; i<pic_arr.length ; i++){
+            html_div += '<div class="swiper-slide"><img src="'+pic_arr[i]+'" ></div>';
+        }
+        var popHtml="<div class='swiper-container picture_preview' id='picture_preview' style='display:none;'>"
+            +"<a class='preview_close' title='关闭' id='previewClose'>关闭</a>"
+            +"<div class='swiper-wrapper swiper-no-swiping'>"+html_div+"</div>"
+            +"<div class='swiper-pagination swiper-pagination-pop'></div>"
+            +"<div class='swiper-button-next swiper-button-white'></div>"
+            +"<div class='swiper-button-prev swiper-button-white'></div>"
+            +"</div>";
+        $('body').append(popHtml)
+        $('#picture_preview').show();
+        var swiperPop = new Swiper('.picture_preview', {
+            nextButton: '.swiper-button-next',
+            prevButton: '.swiper-button-prev',
+            pagination: '.swiper-pagination-pop',
+            noSwiping:true,
+            paginationType: 'fraction',
+            paginationClickable: true,
+            //preloadImages: false,
+            //lazyLoading: true,
+            initialSlide:nIndex,
+            onSlideChangeStart: function(swiperPop){
+
+            },
+            onSlideChangeEnd: function(swiperPop){
+                //缩放控件
+                $('.picture_preview .swiper-slide-active img').smartZoom({'containerClass':'zoomableContainer'});
+            }
+        });
+        //缩放控件
+        $('.picture_preview .swiper-slide-active img').smartZoom({'containerClass':'zoomableContainer'});
+        //关闭预览
+        $("#previewClose").click(function(){
+            $('#picture_preview').remove();
+        })
+    }
+</script>
+</body>
+</html>

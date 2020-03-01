@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Cache-Control" content="no-transform " />
+    <meta http-equiv="pragram" content="no-cache" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="viewport"
+      id="viewport"
+      content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1"
+    />
+    <title>登录</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"
+    />
+    <link rel="stylesheet" href="static/css/common.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        font-size: 100%;
+        font-family: Arial, Helvetica, sans-serif;
+        word-break: break-all;
+        word-wrap: break-word;
+        outline: none;
+      }
+
+      input {
+        border: none;
+        outline: 0px;
+        -webkit-appearance: none;
+      }
+
+      body {
+        background: #fff;
+      }
+
+      #login {
+        background: transparent;
+        margin-right: 15px;
+        margin-left: 15px;
+      }
+
+      h1 {
+        color: #000000;
+        margin-left: 15px;
+        margin-top: 28px;
+        font-size: 30px;
+        font-weight: normal;
+      }
+
+      #login h6 {
+        color: white;
+        line-height: 45px;
+        font-size: 17px;
+        background: #448ff7;
+      }
+
+      input {
+        line-height: 45px;
+        -ms-line-height: 0px;
+        font-size: 15px;
+        background-color: #f2f2f2;
+        color: #000;
+        border: none;
+        border-radius: 6px;
+        width: 70%;
+      }
+
+      input:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0px 1000px #f2f2f2 inset !important;
+      }
+
+      #login form .next {
+        width: 100%;
+        height: 45px;
+        line-height: 45px;
+        margin-bottom: 10px;
+        color: #fff;
+        font-size: 15px;
+        background-color: #448ff7;
+        border: none;
+        border-radius: 6px;
+        text-align: center;
+        margin-top: 30px;
+        display: inline-block;
+      }
+
+      .yzm_box {
+        width: 100%;
+        height: 45px;
+        margin-top: 10px;
+        background: #f2f2f2;
+        position: relative;
+        border-radius: 6px;
+      }
+
+      #send_code_btn {
+        border: none;
+        line-height: 30px;
+        height: 30px;
+        background: #448ff7;
+        font-size: 15px;
+        color: white;
+        width: 110px;
+        margin: 8px;
+        position: absolute;
+        right: 0;
+        border-radius: 5px;
+        text-align: center;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+      }
+
+      .phone {
+        padding-left: 15px;
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="login">
+      <h1>手机号验证身份</h1>
+      <form method="post">
+        <div class="yzm_box" style="margin-top: 28px">
+          <input
+            id="user_phone"
+            type="tel"
+            maxlength="11"
+            placeholder="请输入手机号"
+            name="手机号"
+            class="phone"
+          />
+        </div>
+
+        <div class="yzm_box">
+          <input
+            id="yzm_code"
+            type="text"
+            maxlength="8"
+            placeholder="请输入验证码"
+            name="验证码"
+            class="yzm_input phone"
+          />
+          <input
+            id="send_code_btn"
+            class="send_yzm"
+            type="button"
+            value=" 获取验证码"
+          />
+        </div>
+        <a class="next">下一步</a>
+      </form>
+    </div>
+  </body>
+</html>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="text/javascript" src="static/js/common.js"></script>
+<script type="text/javascript">
+
+  //倒计时
+  var countdown = 60;
+  var userPhone, yzmCode, token;
+
+  function settime() {
+    if (countdown == 0) {
+      $("#send_code_btn").removeAttr("disabled");
+      $("#send_code_btn").val("获取验证码");
+      $("#send_code_btn").css("background-color", "#448ff7");
+      $("#send_code_btn").css("color", "#ffffff");
+      countdown = 60;
+      return false;
+    } else {
+      $("#send_code_btn").attr("disabled", true);
+      $("#send_code_btn").val("重新发送(" + countdown + ")");
+      $("#send_code_btn").css("background-color", "#bbbbbb");
+      $("#send_code_btn").css("color", "#ffffff");
+      countdown--;
+    }
+    setTimeout(function() {
+      settime();
+    }, 1000);
+  }
+
+  $("#send_code_btn").on("click", function() {
+    userPhone = $("#user_phone").val();
+    if (userPhone == null || userPhone == "") {
+      alert("手机号不能为空");
+      return false;
+    }
+    if (userPhone.length < 11 || userPhone.length > 11) {
+      alert("手机号格式不对");
+      return false;
+    }
+    sendCode();
+  });
+
+  $(".next").on("click", function() {
+    userPhone = $("#user_phone").val();
+    if (userPhone == null || userPhone == "") {
+      alert("手机号不能为空");
+      return false;
+    }
+    if (userPhone.length < 11 || userPhone.length > 11) {
+      alert("手机号格式不对");
+      return false;
+    }
+    if (yzmCode == null || yzmCode == "") {
+      alert("验证码不能为空！");
+      return false;
+    }
+    var c = yzmCode;
+    var b = $("#yzm_code").val();
+    if (yzmCode == b) {
+      //window.location.replace("homePages.html");
+      window.location.href = "homePages.html";
+      //console.log("验证码正确可以跳转")
+    } else {
+       alert("验证码不正确！");
+    }
+  });
+
+  var sendCode = function() {
+    var datas = {}; // 要发送post请求的请求体  确认格式假如说是json   {"参数1":xxx,"参数2":xxx}
+    datas.params = '{"phoneNumber":"' + userPhone + '"}';
+    var url =
+      "http://192.168.1.16:9005/insurance-intact-wechat-api/send_veri_code.htm"; // 要发送ajax请求的url
+    $.ajax({
+      url: url, // 请求的url
+      dataType: "JSON", // 期望返回的数据类型
+      type: "post", // 请求你去方式
+      data: datas, // 需要携带的数据
+      success: function(data) {
+        // 请求成功的回调函数
+        //console.log(data);
+        //console.log(typeof data.errorMsg);  string
+        var getToken = data.errorMsg.split(":");
+        token = getToken[1];
+        var showMsg = getToken[0];
+        //console.log(token)
+        if (data.errorCode == 0) {
+          yzmCode = showMsg;
+          window.localStorage.setItem("phone", JSON.stringify(userPhone));
+          var cookieToken = setCookie("token",token,7);
+          console.log(cookieToken)
+          settime();
+        } else {
+          if (data.errorMsg == null || data.errorMsg == "") {
+            alert("获取验证码失败！");
+          } else {
+            console.log(data.showMsg);
+          }
+        }
+      },
+      error: function(data) {
+        alert("获取验证码失败！");
+        //alert(JSON.parse(data));
+        console.log(data);
+      }
+    });
+  };
+
+  // window.onload=function(){
+  //     //alert("hello world");
+  //     var usertoken = JSON.parse(window.localStorage.getItem('token'))
+  //     var header = {"token": usertoken};
+  //     console.log(usertoken,'-----------页面一加载就获取用户token')
+  //      //datas2.params={"userToken",token},
+  //     var url = " http://192.168.1.16:9005/insurance-intact-wechat-api/checkToken.htm";
+  //     var post = ["post","options"]
+  //     $.ajax({
+  //         url:url,
+  //         dataType:"JSON",
+  //         type: post[0],
+  //         beforeSend: function (xhr) {
+  //                     xhr.setRequestHeader("token", usertoken);
+  //                 },
+  //         headers:{'token':usertoken},
+  //         success: function (res) {
+  //             // let oldMsg = data.errorMsg.split(":");
+  //             // let oldMsgtoken = oldMsg[1];
+  //             if (post=post[0]) {
+  //                 console.log("hello")
+  //             }
+  //             if(res.resultCode==000000){
+  //                 console.log("hello")
+  //             }
+  //         },
+  //         error: function (data) {
+  //             //console.log(data);
+  //         }
+  //     });
+  // setTimeout(function(){
+  //   console.log('登录成功，页面将在1s后跳转')
+  // 	window.location.href = 'homePages.html'
+  // },1000)
+  //}
+  //cookie
+  function setCookie(cname,cvalue,exdays){
+    var d = new Date();
+    d.setTime(d.getTime()+(exdays*24*60*60*1000));
+    var expires = "expires="+d.toGMTString();
+    document.cookie = cname+"="+cvalue+"; "+expires;
+}
+function getCookie(cname){
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i].trim();
+        if (c.indexOf(name)==0) { return c.substring(name.length,c.length); }
+    }
+    return "";
+}
+
+  window.onload = function () {
+      //var usertoken = JSON.parse(window.localStorage.getItem('token'))
+      var usertoken = getCookie("token");
+      console.log(usertoken,'-----------页面一加载就获取用户token')
+  axios({
+      method:'post',
+      url:'http://192.168.1.16:9005/insurance-intact-wechat-api/checkToken.htm',
+      data:{
+          param:"我是token"
+      },
+      changeOrigin:true,
+      statusText: 000000,
+      withCredentials:true,
+      crossDomain: true,
+      headers: {
+              'Content-Type':'application/x-www-form-urlencoded',
+              'token': usertoken
+        }
+  }).then(function(res){
+      console.log(res.data);
+      let resdata = res.data.split(",");
+      //console.log(resdata[0]);
+      let resdata2 =resdata[0].split("{");
+      //console.log(resdata2[1]);
+      let resdata3 = "{" +resdata2[1]+ "}"
+      let realutCode = JSON.parse(resdata3);
+      //console.log(realutCode.resultCode);
+      if(realutCode.resultCode==000000){
+        setTimeout(function(){
+        alert('登录成功，欢迎进入')
+        window.location.href = 'homePages.html'
+    },1500)
+    }else{
+        return
+    }
+  })
+  .catch(function (error) {
+      console.log(error);
+    });
+  }
+</script>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!--STATUS OK-->
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+<style type="text/css">
+<#include "style.css">
+</style>
+
+<script type="text/javascript" src="<@sp.ctx />js/jquery-1.8.2.min.js"></script>
+
+<title>返回CODE对照查询</title>
+	
+</head>
+
+<body>
+
+<div id="form-wrapper">
+<span style="width:100%;border: 1px solid; margin: 20px" ><a href="<@sp.ctx />/test.htm" >返回首页</a></span>
+        <div id="form-inner">
+        <label><#list languages as lan><a href="<@sp.ctx />errorCodeApi.htm?language=${lan}">${lan}</a> </#list> 
+        
+        <#if languages?size gt 1 >
+        <a href="<@sp.ctx />errorCodeApi.htm?language=all">全部语言</a></label>
+         </#if>
+         
+         <#list errorCodeMaps?keys as lan> 
+         <#assign errorMap=errorCodeMaps[lan]  />
+        <fieldset >
+        <legend>${lan}_对照码</legend>
+        <table  >
+        	<#list errorMap?keys as cod> 
+	        	<tr>
+		          <th align="right" valign="top">${cod}</th>
+		          <td valign="top">${errorMap[cod]}</td>
+	          </tr>
+	          </#list>
+         
+          </table>
+          </fieldset>
+          
+        </#list>
+		        
+        
+      		
+      		
+        </div>
+</div>
+
+</html>
+

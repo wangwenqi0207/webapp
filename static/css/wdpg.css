@@ -1,0 +1,29 @@
+.wdpg_content{position: relative;margin-top: 10px;background: white}
+.wdpg_content .order_list_li{
+    background: white;border-bottom: 10px solid #f2f2f2;
+}
+.order_num{border-bottom: 1px solid #dddddd;padding-left:40px;position: relative;
+    height:45px;     background: white; }
+.pg_icon{background: url("../images/pg_icon.png") no-repeat; background-size: 100% 100%;margin-right: 10px;display: block;
+position: absolute;left: 15px;top: 14px;width: 17px;height: 17px;}
+.order_num span{line-height: 45px;text-align: center;color: #333333;font-size: 15px;}
+.order_type{color: #448ff7;font-size: 14px;line-height: 45px;text-align: center}
+.user_box{line-height: 20px;font-size: 15px;color: #333;background: #fff;
+    padding:20px 15px 20px 90px;position: relative;}
+.urse_img{position: absolute;left: 15px;width: 60px;height: 60px;}
+.order_time{color: #999999;font-size: 12px;margin-top: 5px;}
+#mask,.mask{ position:fixed; top:46px; left:0; width:100%;bottom:50px; background:rgba(255,255,255,1); display:none; z-index:1000}
+.mask{ display:block}
+.orderNo{background: red}
+.no_data{height: 60px;font-size: 30px;font-weight: bold;color: #999999;padding-top:120px;text-align: center}
+
+
+
+
+
+
+
+
+
+
+

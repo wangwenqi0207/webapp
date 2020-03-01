@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Cache-Control" content="no-transform " />
+		<meta http-equiv="pragram" content="no-cache">
+		<meta name="format-detection" content="telephone=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="viewport" id="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1" />
+		<title>我的评估</title>
+		<link rel="stylesheet" href="static/css/common.css">
+		<link rel="stylesheet" href="static/css/wdpg.css">
+		<link rel="stylesheet" href="static/css/mui.min.css" />
+		<link href="static/js/swiper/swiper.min.css" type="text/css" rel="stylesheet" />
+		<style type="text/css">
+			.mui-table-view-cell.mui-active {
+				background-color: #fff;
+			}
+		</style>
+	</head>
+
+	<body style="background: #f2f2f2">
+		<!--下拉刷新容器-->
+		<div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="background: #f2f2f2">
+			<div class="mui-scroll ">
+				<!--数据列表-->
+				<ul class="mui-table-view mui-table-view-chevron" id="list"></ul>
+			</div>
+		</div>
+		<p class="no_data" style="display: none">暂无数据</p>
+
+		<script src="static/js/jquery-3.3.1.min.js"></script>
+		<script src="static/js/mui.min.js"></script>
+		<script src="static/js/common.js"></script>
+		<script src="static/js/swiper/swiper-3.3.1.jquery.min.js"></script>
+
+		<script>
+			var pageNo = 1;
+			var totalPage;
+			$(function() {
+				 mui("#pullrefresh").on('tap', 'a', function (event) {
+                    this.click();
+                });
+				$("#list").on("click", "a", itemclick);
+				loadData();
+			});
+			mui.init({
+				pullRefresh: {
+					container: '#pullrefresh',
+					down: {
+						style: 'circle',
+						callback: pulldownRefresh
+					},
+					up: {
+						//						auto: true,
+						//						contentrefresh: '正在加载...',
+						style: 'circle',
+						callback: pullupRefresh
+					}
+				}
+			});
+
+			var count = 0;
+
+			function pullupRefresh() { //上拉
+				setTimeout(function() {
+					if(pageNo == totalPage) {
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh(true); //参数为true代表没有更多数据了
+						return;
+					} else {
+						pageNo++;
+						loadData();
+					}
+				}, 1500);
+			}
+			//待分配 ----> 0
+			//已完成 ----> 1
+			//待接单 ----> 2
+			//待评估 ----> 3
+			//正在评估 ----> 4
+			//评估师A完成评估(评估人已提交) ----> 5
+			//已评估 ----> 6
+			//待指派 ----> 8
+			//待审核 ----> 10
+			//
+			//参保人取消 ----> -1
+			//拒接单(评估人取消) ----> -2
+			//系统取消 ----> -3
+			function addData(data) {
+                if (data.dataList.length > 0) {
+                    $("#pullrefresh").css("display","block");
+                    $(".no_data").css("display","none");
+                } else {
+                    $("#pullrefresh").css("display","none");
+                    $(".no_data").css("display","block");
+                }
+
+                totalPage = data.totalPage;
+				var table = document.body.querySelector('.mui-table-view');
+				var cells = document.body.querySelectorAll('.mui-table-view-cell');
+				data.dataList.map(function(con) {
+					var status;
+					switch(con.orderStatus) {
+						case -1:
+							status = "参保人取消";
+							break;
+						case -2:
+							status = "拒接单";
+							break;
+						case -3:
+							status = "系统取消";
+							break;
+						case 0:
+							status = "待分配";
+							break;
+						case 1:
+							status = "已完成";
+							break;
+						case 2:
+							status = "待接单";
+							break;
+						case 3:
+							status = "待评估";
+							break;
+						case 4:
+							status = "正在评估";
+							break;
+						case 5:
+							status = "评估师A完成评估";
+							break;
+						case 6:
+							status = "已评估";
+							break;
+						case 8:
+							status = "待指派";
+							break;
+						case 10:
+							status = "待审核";
+							break;
+						default:
+							status = "未分配";
+							break;
+					}
+					var li = document.createElement('li');
+					li.className = 'mui-table-view-cell';
+					var d = con.orderNo;
+					li.innerHTML = '<a class="to_r" orderNo=' + con.orderNo + ' >' +
+						'<div class="order_num">' +
+						'<span><i class="pg_icon"></i>订单编号:' + con.orderNo + '</span>' +
+						'<span class="to_r order_type">' + status + '</span>' +
+						'</div>' +
+						'<div class="user_box">' +
+						'<img src="img/1.png" class="urse_img"/>' +
+						'<p>' + con.insName + ',' + (con.sex == 'M' ? '男' : '女') + ',' + con.age + '岁 </p>' +
+						'<p>' + con.insIdCard + '</p>' +
+						'<p class="order_time">' + con.createdTime + '</p>' +
+						'</div>' +
+						'</a>';
+					table.appendChild(li);
+					//下拉刷新，新纪录插到最前面；
+					//					table.insertBefore(li, table.firstChild);
+
+				});
+			}
+			/**
+			 * 下拉刷新具体业务实现
+			 */
+			function pulldownRefresh() {
+				setTimeout(function() {
+					//addData();
+					pageNo = 1;
+					loadData();
+					mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+					//					mui.toast("为你推荐了5篇文章");
+				}, 0);
+			}
+
+			function loadData() {
+				var datas = {};
+				datas.act = "getOrderList";
+				datas.pageSize = "10";
+				datas.pageNo = pageNo;
+				var url = baseurl + "ltcins-intact-ins-api/authed/user_apply_order_list.htm";
+				$.ajax(url, {
+					type: "post",
+					data: datas,
+					success: function(data) {
+						if(data.errorCode == 0) {
+							if(pageNo == 1) {
+								$("#list").empty();
+							}
+							addData(data);
+						} else {
+						    if (data.errorMsg == null || data.errorMsg == "") {
+                                mui.toast("验证失败")
+							} else {
+                                mui.toast(data.errorMsg);
+							}
+
+						}
+					},
+                    error: function (data) {
+                        alert(JSON.parse(data));
+                    }
+				});
+			};
+			var itemclick = function() {
+				var num = $(this).attr("orderNo");
+				self.location = "orderDetail.html?orderNo=" + num;
+			};
+		</script>
+	</body>
+
+</html>

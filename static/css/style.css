@@ -1,0 +1,170 @@
+input::-webkit-input-placeholder {
+  color: #ccc; }
+
+input::-moz-placeholder {
+  color: #ccc; }
+
+body {
+  background: #f2f2f2; }
+
+.container {
+  padding-top: 44px;
+  padding-bottom: 68px;
+  background: #f2f2f2; }
+  .container .title {
+    line-height: 40px;
+    padding-left: 15px;
+    font-size: 13px;
+    color: #666; }
+  .container .main {
+    background: #fff; }
+    .container .main ul li {
+      line-height: 45px;
+      border-bottom: #ddd 0.5px solid;
+      margin-left: 15px;
+      font-size: 15px;
+      position: relative; }
+      .container .main ul li:nth-child(4), .container .main ul li:nth-child(6) {
+        border-bottom: none; }
+      .container .main ul li.sex i {
+        font-style: normal;
+        display: inline-block;
+        width: 60px;
+        text-align: center;
+        line-height: 30px;
+        color: #999;
+        border-radius: 6px;
+        border: 1px solid #ddd; }
+        .container .main ul li.sex i.current {
+          border: solid 1px #e03d47;
+          color: #e03d47; }
+      .container .main ul li input {
+        text-align: right;
+        height: 44px; }
+      .container .main ul li select,
+      .container .main ul li option {
+        color: #ccc; }
+      .container .main ul li .photo {
+        border-top: #ddd 0.5px solid;
+        border-bottom: #ddd 0.5px solid; }
+        .container .main ul li .photo .tip {
+          text-align: center;
+          font-size: 10px;
+          color: #666; }
+        .container .main ul li .photo ul {
+          margin-left: -15px; }
+          .container .main ul li .photo ul li {
+            width: 50%;
+            float: left;
+            line-height: 0;
+            border: none;
+            margin-left: 0; }
+            .container .main ul li .photo ul li:nth-child(1) {
+              -margin-right: 21px; }
+            .container .main ul li .photo ul li span {
+              display: block;
+              padding: 0 15px; }
+              .container .main ul li .photo ul li span i {
+                position: relative;
+                display: block;
+                width: 100%;
+                height: 100%; }
+                .container .main ul li .photo ul li span i img {
+                  width: 100%;
+                  height: 100%; }
+            .container .main ul li .photo ul li p {
+              margin: 15px 0 18px 0;
+              text-align: center;
+              font-size: 12px; }
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  line-height: 50px;
+  text-align: center;
+  color: #fff;
+  background: #e03d47; }
+
+.webuploader-pick {
+  position: relative;
+  display: block;
+  cursor: pointer;
+  text-align: center;
+  overflow: hidden;
+  width: 152px;
+  height: 102px; }
+
+.front input {
+  position: absolute;
+  font-size: 100px;
+  right: 0;
+  top: 0;
+  opacity: 0;
+  cursor: pointer; }
+
+.address {
+  background: #fff; }
+  .address li {
+    line-height: 45px;
+    font-size: 15px;
+    padding-left: 15px;
+    border-bottom: 0.5px solid #ddd;
+    background: url(../images/arrowR.png) no-repeat;
+    background-position-x: 97%;
+    background-position-y: 15px;
+    background-size: 8px 15px; }
+    .address li:last-child {
+      border: none;
+      background-image: none; }
+
+.cards {
+  width: 100%;
+  margin-top: 15px;
+  padding-bottom: 15px;
+  background: #fff; }
+  .cards .img {
+    width: 50%; }
+    .cards .img span {
+      position: relative;
+      display: block;
+      padding: 0 15px; }
+      .cards .img span img {
+        display: block;
+        width: 100%;
+        height: 100%; }
+      .cards .img span p {
+        text-align: center;
+        padding: 0 15px;
+        background-color: rgba(134, 134, 134, 0.5);
+        margin-top: -22px;
+        opacity: 1;
+        color: #fff; }
+
+.sub_content {
+  padding-top: 120px; }
+  .sub_content .img {
+    text-align: center; }
+    .sub_content .img img {
+      width: 70px;
+      height: 70px; }
+  .sub_content .title {
+    margin: 20px 0 13px 0;
+    font-size: 30px;
+    text-align: center; }
+  .sub_content .tips {
+    font-size: 14px;
+    color: #666;
+    text-align: center; }
+  .sub_content .back {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    margin-left: -77.5px;
+    width: 155px;
+    line-height: 40px;
+    border: 0.5px solid #e6646c;
+    text-align: center;
+    color: #e6646c;
+    border-radius: 5px; }

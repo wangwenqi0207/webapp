@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!--STATUS OK-->
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+<style type="text/css">
+<#include "style.css">
+</style>
+<script type="text/javascript" src="<@sp.ctx />js/jquery-1.8.2.min.js"></script>
+<script type="text/javascript">
+	function openTest(url){
+		window.location.href="${rc.contextPath}"+url+"?test=1";
+	}
+	function showOrHide(ind){
+		var id = "c_"+ind;
+		$("#"+id).slideToggle();
+	}
+</script>
+<style type="text/css">
+	a:link {  
+    color: #3B5998;  
+    text-decoration: none;  
+}  
+  
+	.ui-base-button {  
+	    background-position: right top;  
+	    background-repeat: no-repeat;  
+	    font-size: 12px;  
+	    color: #414241;  
+	    font-family: "宋体","Arial","Helvetica","Verdana","sans-serif";  
+	    padding-right:9px;  
+	    padding-top:5px;  
+	    padding-bottom:6px;  
+	}  
+	.ui-base-button span {  
+	    background-position: left top;  
+	    background-repeat: no-repeat;  
+	    padding-left:9px;  
+	    padding-top:5px;  
+	    padding-bottom:6px;  
+	}  
+	
+</style>
+	<title>测试主页面</title>
+</head>
+
+<body>
+
+<div id="form-wrapper">
+
+    <form method="post" id="fm1">
+        <div id="form-inner">
+        <#list testCategory as ca>
+        <fieldset >
+        <legend><a class="ui-base-button" href="javascript:showOrHide(${ca_index})">  
+<span>${ca.name!''}</span>  
+</a> </legend>
+        <table id="c_${ca_index}"  >
+        	<#list ca.testTitleUrls as tu>
+        	<tr>
+	          <th align="left" style="width: 300px"><a href="javascript:openTest('${tu.url}')" >${tu.name}</a></th>
+          </tr>
+          	</#list>
+          </table>
+          </fieldset>
+          
+        </#list>
+          
+          
+          
+        </div>
+    </form>
+</div>
+
+</html>
+

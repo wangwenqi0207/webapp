@@ -1,0 +1,231 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Cache-Control" content="no-transform "/>
+    <meta http-equiv="pragram" content="no-cache">
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="viewport" id="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>我要申请</title>
+    <link rel="stylesheet" href="static/css/common.css">
+    <link rel="stylesheet" href="static/css/cqhlx.css">
+</head>
+
+<body style="position: relative;width: 100%;height: 100%;">
+<p class="title">填写联系人信息（2/2）</p>
+<div class="main">
+    <ul class="cbrxx2_list_ul">
+        <li>
+            联系人姓名
+            <input id="sqr_name" type="text" placeholder="输入姓名" class="to_right" maxlength="14">
+        </li>
+        <li class="sex" id="sqr_sex">
+            性别
+            <span class="to_right" id="chose_sex">
+            <i class="current">男</i>
+            <i >女</i>
+          </span>
+        </li>
+        <li>
+            身份证号(选填)
+            <input id="sqr_id_no" type="text" placeholder="请输入身份证" class="to_right" maxlength="21">
+        </li>
+        <li>
+            手机号
+            <input id="sqr_phone" type="tel" placeholder="请输入手机号" class="to_right" maxlength="11">
+        </li>
+        <li id="ycbrgx_dialog">
+            与参保人关系
+            <span class="to_right arrow" style="padding-right: 15px;"><i id='ycbrgxResult'>与参保人关系</i></span>
+        </li>
+        <li><p>联系地址(请填写真实信息)</p></li>
+        <li id="showCityPicker"><span id="addressReturn">地址</span> <i class="return_img"></i></li>
+        <li><textarea class="textarea_box"  rows="3" placeholder="读取用户信息(可修改)"></textarea></li>
+    </ul>
+</div>
+<a class="next_step2" style="z-index:-1">提交</a>
+
+<script src="static/js/jquery-3.3.1.min.js"></script>
+<script src="static/js/common.js"></script>
+<script src="static/js/picker.min.js"></script>
+<script type="text/javascript" src="static/js/city.js"></script>
+<script type="text/javascript" src="static/js/sqpg.data.js"></script>
+<script type="text/javascript" src="static/js/ycbrgxSelect.js"></script>
+<script type="text/javascript" src="static/js/citySelect.js"></script>
+
+<script>
+    var cbrName, cbrIdNum, cbrAge, cbrSex, cbrPhone;
+    var sqrName, sqrIdNum, sqrSex, sqrPhone, sqrAddress;
+    var applyPics = "";
+    var phone = "";
+
+
+    $(function () {
+        cbrName = getUrlParam("name");
+        cbrIdNum = getUrlParam("card_number");
+        cbrAge = getUrlParam("age");
+        cbrSex = getUrlParam("sex");
+        cbrPhone = getUrlParam("phone");
+        applyPics = getUrlParam("applyPics");
+        sqrSex = "M";
+        if (cbrPhone != null || cbrPhone != "") {
+            phone = cbrPhone;
+        } else {
+            phone = "";
+        }
+        var lxrPhone = window.localStorage.getItem("phone");
+        if (lxrPhone.length > 0) {
+            $("#sqr_phone").val(lxrPhone);
+        }
+        var sex = $('#chose_sex i');
+        sex.on('click', function () {
+            $(this).addClass('current').siblings().removeClass('current');
+        });
+        var obj_lis = document.getElementById("sqr_sex").getElementsByTagName("i");
+        for(i=0;i<obj_lis.length;i++){
+            obj_lis[i].onclick = function(){
+                if (this.innerText == "女") {
+                    sqrSex = "F";
+                } else {
+                    sqrSex = "M";
+                }
+            }
+        }
+
+        var winHeight = $(window).height();   //获取当前页面高度
+        $(window).resize(function(){
+            var thisHeight=$(this).height();
+            if(winHeight - thisHeight >50){
+                //当软键盘弹出，在这里面操作
+                $(".next_step2").css("position","absolute")
+            }else{
+                //当软键盘收起，在此处操作
+                $(".next_step2").css("position","fixed")
+            }
+        });
+
+    });
+
+/*    (function($, doc) {
+        $.init();
+        $.ready(function() {
+            /!*与参保人关系*!/
+            var _getParam = function(obj, param) {
+                return obj[param] || '';
+            };
+            var cbrPicker = new $.PopPicker();
+            cbrPicker.setData(ycbrgxData);
+
+            var showCbrPickerButton = doc.getElementById('ycbrgx_dialog');
+            var cbrResult = doc.getElementById('ycbrgxResult');
+            showCbrPickerButton.addEventListener('tap', function(event) {
+                cbrPicker.show(function(items) {
+                    cbrPicker.hide();
+                    cbrPicker.dispose();
+                    cbrResult.innerText = items[0].text;
+                    sqrCbrgx = parseInt(items[0].value);
+                });
+
+            }, false);
+
+            var cityPicker3 = new $.PopPicker({
+                layer: 3
+            });
+            cityPicker3.setData(cityData3);
+            cityPicker3.pickers[0].setSelectedIndex(10);
+            cityPicker3.pickers[1].setSelectedIndex(6);
+            cityPicker3.pickers[2].setSelectedIndex(6);
+            var showCityPickerButton = doc.getElementById('showCityPicker');
+            var cityResult3 = doc.getElementById('addressReturn');
+            showCityPickerButton.addEventListener('tap', function(event) {
+                cityPicker3.show(function(items) {
+                    cbrPicker.hide();
+                    cbrPicker.dispose();
+                    cityResult3.innerText = _getParam(items[0], 'text') + " " + _getParam(items[1], 'text') + " " + _getParam(items[2], 'text');
+                    sqrProvince = items[0].text;
+                    sqrCity = items[1].text;
+                    sqrDistrict = items[2].text;
+                });
+            }, false);
+        });
+    })(mui, document);*/
+
+    $(".next_step2").on('click', function () {
+        sqrName = $("#sqr_name").val();
+        sqrIdNum =  $("#sqr_id_no").val();
+        sqrPhone =  $("#sqr_phone").val();
+        sqrAddress =$(".textarea_box").val();
+
+        if (sqrName == null || sqrName == "") {
+            alert("联系人姓名不能为空！");
+            return false;
+        }
+
+        if (sqrPhone == null || sqrPhone == "") {
+            alert("联系人电话号码不能为空！");
+            return false;
+        }
+        if (sqrPhone.length > 11 || sqrPhone.length < 10) {
+            alert("联系人电话号码格式不正确！");
+            return false;
+        }
+        if(relationshipInsUser == "" || relationshipInsUser == null) {
+            alert("请选择与参保人关系！");
+            return false;
+        }
+        if(province == "" || province == null ||city == "" || city == null) {
+            alert("请选择所属省份地址！");
+            return false;
+        }
+        if (sqrAddress == null || sqrAddress == "") {
+            alert("联系人用户地址信息不能为空！");
+            return false;
+        }
+        checkNum();
+    });
+
+    var checkNum = function(){
+        var datas = {};
+        datas.act = "ApplyForOrder";
+        datas.insName =cbrName;
+        datas.insIdcard = cbrIdNum;
+        datas.applyPics = applyPics;
+        datas.contactName = sqrName;
+        datas.insPhone = phone;
+        datas.contactSex = sqrSex;
+        datas.contactIdcard = sqrIdNum;
+        datas.contactPhone = sqrPhone;
+        datas.relationshipInsUser = relationshipInsUser;
+        datas.province = province;
+        datas.city = city;
+        datas.district = district;
+        datas.appointedAddress = sqrAddress;
+        var url = baseurl+"ltcins-intact-ins-api/authed/assess_order_apply.htm";
+        $.ajax(url, {
+            type:"post",
+            data: datas,
+            success: function(data) {
+                if (data.errorCode==0) {
+                    window.location="tjcg.html";
+                }else {
+                    if(data.errorMsg == null || data.errorMsg == "") {
+                        alert("申请工单失败！");
+                    } else {
+                        alert(data.errorMsg);
+                    }
+                }
+            },
+            error: function (data) {
+                alert(JSON.parse(data));
+                alert("申请工单失败！");
+            }
+        });
+    };
+</script>
+</body>
+
+</html>

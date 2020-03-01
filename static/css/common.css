@@ -1,0 +1,118 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-size: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  word-break: break-all;
+  word-wrap: break-word;
+  outline: none;
+}
+
+ul,
+ol,
+dl {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+input {
+  border: none;
+}
+
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+.fl {
+  float: left;
+}
+i{font-style: normal;}
+.fr {
+  float: right;
+}
+
+.clear::after {
+  display: block;
+  content: '.';
+  height: 0;
+  line-height: 0;
+  clear: both;
+  visibility: hidden;
+}
+footer {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  z-index: 9999;
+  background: #fff; }
+footer ul li {
+  font-size: 18px;
+  line-height: 50px; }
+footer ul li:nth-child(1) {
+  float: left;
+  color: #000;
+  padding-left: 15px; }
+footer ul li:nth-child(2) {
+  float: right;
+  color: #448ff7;
+  padding-right: 15px; }
+header {
+  width: 100%;
+  height: 44px;
+  background: #fff;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 999999;
+}
+
+header .top_nav {
+  position: relative;
+  width: 100%;
+  line-height: 44px;
+  text-align: center;
+  color: #000;
+  font-size: 17px;
+  border-bottom: 0.5px solid #ddd;
+}
+
+header .top_nav .back {
+  position: absolute;
+  display: block;
+  width: 12px;
+  height: 19px;
+  margin-top: 13px;
+  margin-left: 15px;
+  background: url(../images/arrowL.png) no-repeat;
+  background-size: 100% 100%;
+}
+
+.top_nav span {
+  position: absolute;
+  right: 15px;
+  font-size: 17px;
+  color: #e03d47;
+}
+
+.to_r {
+  position: absolute;
+  right: 15px;
+  color: #333;
+}
+
+.to_r.arrow {
+  background: url(../images/arrowR.png) no-repeat;
+  background-position-x: 97%;
+  background-position-y: 15px;
+  background-size: 8px 15px;
+}
+.container {background: #f2f2f2; width: 100%; }
+
+/*消息提示*/
+.msg_box,.loading_box{ position:fixed; top:50%; left:50%;-webkit-transform:translate(-50%,-50%);-moz-transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);-o-transform:translate(-50%,-50%); background:rgba(0,0,0,0.7); font-size:14px; text-align:center; line-height:20px; color:#fff; padding:10px 20px; box-sizing:border-box; border-radius:9px; max-width:80%; z-index:99999}
+.a_link{display:block}
+.temp_text{ position:absolute; right:15px; top:0px; height:44px; line-height:44px; background:#fff; overflow:hidden; width:100%; }

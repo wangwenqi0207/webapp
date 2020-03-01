@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" 
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">	
+	
+	
+	<display-name>ltcins-intact-ins-api</display-name>
+	<context-param>
+		<param-name>webAppRootKey</param-name>
+		<param-value>ltcins-intact-ins-api</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath*:context/**/*.xml
+		</param-value>
+	</context-param>
+	<listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	
+		
+	<!-- 方便在生产环境修改和配置，生产上一般的级别要改成info,开发机器用的是debug -->
+	<context-param>
+		<param-name>log4jConfigLocation</param-name>
+		<param-value>
+			file:/opt/wondersgroup/${webAppRootKey}/log4j.properties
+		</param-value>
+	</context-param>
+	
+	
+	
+
+	<servlet>
+		<servlet-name>main-servlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>
+				classpath*:servlet/**/*.xml,
+			</param-value>
+		</init-param>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>main-servlet</servlet-name>
+		<url-pattern>*.htm</url-pattern>
+	</servlet-mapping>
+
+
+	<session-config>
+		<session-timeout>10</session-timeout>
+	</session-config>
+
+	<welcome-file-list>
+		<welcome-file>/index.html</welcome-file>
+	</welcome-file-list>
+
+	
+	<!-- 定义异常页面 -->
+<!-- 	<error-page>
+		<error-code>403</error-code>
+		<location>/error.htm?code=403</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/error.htm?code=404</location>
+	</error-page>
+
+	<error-page>
+		<error-code>500</error-code>
+		<location>/error.htm?code=500</location>
+	</error-page> -->
+
+	<filter>
+		<filter-name>appEcryptApiFilter</filter-name>
+		<filter-class>com.wondersgroup.ltcins.ins.api.filter.AppEcryptApiFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	
+	
+	<!--<filter>
+		<description>重复提交过滤器</description>
+		<filter-name>reqTokenFilter</filter-name>
+		<filter-class>com.wondersgroup.ltcins.ins.api.filter.ReqTokenFilter</filter-class>
+	</filter>-->
+	
+	
+	<filter-mapping>
+		<filter-name>appEcryptApiFilter</filter-name>
+		<url-pattern>*.htm</url-pattern>
+	</filter-mapping>
+	
+	<!-- 重复提交过滤器  -->
+	<!-- 
+	<filter-mapping>
+		<filter-name>reqTokenFilter</filter-name>
+		<url-pattern>*.htm</url-pattern>
+	</filter-mapping> 
+	 -->
+	
+	
+	
+	<!--<filter>
+		<filter-name>loginSessionFilter</filter-name>
+		<filter-class>com.wondersgroup.ltcins.ins.api.filter.AppLoginSessionFilter</filter-class>
+		<init-param>
+			<param-name>sessionIdParam</param-name>
+			<param-value>appId</param-value>
+		</init-param>
+		<init-param>
+			<param-name>sessionClass</param-name>
+			<param-value>com.wondersgroup.ltcins.userauth.session.InsApiSession</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>loginSessionFilter</filter-name>
+		<url-pattern>/authed/*</url-pattern>
+	</filter-mapping>-->
+	
+
+</web-app>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Cache-Control" content="no-transform " />
+    <meta http-equiv="pragram" content="no-cache">
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" id="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1" />
+    <title>长期护理险</title>
+    <link rel="stylesheet" href="static/css/common.css">
+    <link rel="stylesheet" href="static/css/cqhlx.css">
+</head>
+<body style="background: #f6f5fa">
+<div class="container" style="background: #f6f5fa">
+    <ul class="content">
+        <li><p>我要申请</p></li>
+        <li>
+            参保人姓名
+            <span class="to_r"><input id="name" type="text" placeholder="请输入参保人姓名" value="" maxlength="12"></span>
+        </li>
+        <li>
+            身份证号
+            <span class="to_r" style="width: 70%"><input id="card_number" type="text" placeholder="请输入身份证号" value="" maxlength="21" ></span>
+        </li>
+        <li><a id="next" class="next_step">校验并下一步</a></li>
+        <!--//href="wysq1.html"-->
+    </ul>
+</div>
+</body>
+<script type="text/javascript" src="static/js/jquery-3.3.1.min.js" ></script>
+<script type="text/javascript" src="static/js/common.js" ></script>
+<script type="text/javascript">
+    var name;
+    var card_number;
+    $(function() {
+        bindEvent();
+    });
+    var bindEvent = function() {
+        $("#next").bind("click", fileBtnClick)
+    };
+    var fileBtnClick = function() {
+        name = $("#name").val();
+        card_number =  $("#card_number").val();
+        if(name==null||name==""||card_number==null||card_number==""){
+            alert("请输入姓名或身份证");
+        }else{
+            checkNum();
+        }
+    };
+    var checkNum = function(){
+        var datas = {};
+        datas.act = "checkIdCard";
+        datas.insIdcard =card_number;
+        var url = baseurl+"ltcins-intact-ins-api/check_idcard.htm";
+        $.ajax(url, {
+            type:"post",
+            data: datas,
+            success: function(data) {
+                if (data.errorCode==0) {
+                    window.location="sqpg1.html?name="+name+"&card_number="+card_number+"&sex="+data.sex+"&age="+data.age;
+//						console.log(JSON.stringify(data));
+                }else{
+                    if(data.errorMsg == null || data.errorMsg == "") {
+                        alert("检查身份证失败！");
+                    } else {
+                        alert(data.errorMsg);
+                    }
+                }
+            },
+            error: function (data) {
+                alert(JSON.parse(data));
+            }
+        });
+    };
+</script>
+</html>
